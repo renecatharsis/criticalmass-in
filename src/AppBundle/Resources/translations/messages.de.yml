@@ -17,6 +17,10 @@ criticalmass:
             tips: Tipps und Tricks
             about-us: Über Caldera Critical Mass
             caldera-faq: Häufig gestellte Fragen zu Caldera
+        help:
+            what-is-critical-mass: Was ist die Critical Mass?
+            faq: Häufig gestellte Fragen
+            help: Bedienungshilfe
         live:
             live: Live
             map: Live-Karte
