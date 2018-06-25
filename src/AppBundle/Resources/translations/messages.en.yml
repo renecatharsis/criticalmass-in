@@ -17,11 +17,7 @@ criticalmass:
             tips: Tips
             about-us: About Caldera Critical Mass
             caldera-faq: Caldera FAQ
-        live:
-            live: Live
-            map: Live Map
-            glympse: Location sharing with Glympse
-            criticalmaps: Location sharing with Critical Maps
+            help: Help
         account:
             account: Your account
             tracks: Tracks

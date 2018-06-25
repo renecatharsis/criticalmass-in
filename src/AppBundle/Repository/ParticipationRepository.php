@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Ride;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 class ParticipationRepository extends EntityRepository
 {
@@ -22,7 +23,7 @@ class ParticipationRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function countParticipationsForRide(Ride $ride, $status)
+    public function countParticipationsForRide(Ride $ride, $status): int
     {
         $builder = $this->createQueryBuilder('participation');
 
@@ -38,6 +39,48 @@ class ParticipationRepository extends EntityRepository
         $query = $builder->getQuery();
 
         return $query->getSingleScalarResult();
+    }
+
+    public function countByUser(User $user): int
+    {
+        $builder = $this->createQueryBuilder('p');
+
+        $builder
+            ->select('COUNT(p)')
+            ->where($builder->expr()->eq('p.user', ':user'))
+            ->setParameter('user', $user)
+            ->andWhere($builder->expr()->eq('p.goingYes', true));
+
+        $query = $builder->getQuery();
+
+        return $query->getSingleScalarResult();
+    }
+
+    public function findByUser(User $user, bool $yes = false, bool $maybe = false, bool $no = false): array
+    {
+        $builder = $this->createQueryBuilder('p');
+
+        $builder
+            ->join('p.ride', 'r')
+            ->where($builder->expr()->eq('p.user', ':user'))
+            ->setParameter('user', $user)
+            ->orderBy('r.dateTime', 'DESC');
+
+        if ($yes) {
+            $builder->andWhere($builder->expr()->eq('p.goingYes', true));
+        }
+
+        if ($maybe) {
+            $builder->andWhere($builder->expr()->eq('p.goingMaybe', true));
+        }
+
+        if ($no) {
+            $builder->andWhere($builder->expr()->eq('p.goingNo', true));
+        }
+
+        $query = $builder->getQuery();
+
+        return $query->getResult();
     }
 }
 

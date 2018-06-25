@@ -12,8 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RideEstimate
 {
     /**
-     * ID der Entitaet.
-     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -27,8 +25,6 @@ class RideEstimate
     protected $user;
 
     /**
-     * Tour, zu der diese Entitaet abgespeichert wurde.
-     *
      * @ORM\ManyToOne(targetEntity="Ride", inversedBy="estimates", fetch="LAZY")
      * @ORM\JoinColumn(name="ride_id", referencedColumnName="id")
      */
@@ -39,6 +35,16 @@ class RideEstimate
      * @ORM\JoinColumn(name="track_id", referencedColumnName="id")
      */
     protected $track;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $latitude;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    protected $longitude;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
@@ -61,181 +67,123 @@ class RideEstimate
     /**
      * @ORM\Column(type="datetime")
      */
-    protected $creationDateTime;
+    protected $dateTime;
 
     public function __construct()
     {
-        $this->creationDateTime = new \DateTime();
+        $this->dateTime = new \DateTime();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Get estimatedParticipants
-     *
-     * @return integer
-     */
-    public function getEstimatedParticipants()
+    public function getEstimatedParticipants(): ?int
     {
         return $this->estimatedParticipants;
     }
 
-    /**
-     * Set estimatedParticipants
-     *
-     * @param integer $estimatedParticipants
-     * @return RideEstimate
-     */
-    public function setEstimatedParticipants($estimatedParticipants)
+    public function setEstimatedParticipants(int $estimatedParticipants = null): RideEstimate
     {
         $this->estimatedParticipants = $estimatedParticipants;
 
         return $this;
     }
 
-    /**
-     * Get estimatedDistance
-     *
-     * @return float
-     */
-    public function getEstimatedDistance()
+    public function getEstimatedDistance(): ?float
     {
         return $this->estimatedDistance;
     }
 
-    /**
-     * Set estimatedDistance
-     *
-     * @param float $estimatedDistance
-     * @return RideEstimate
-     */
-    public function setEstimatedDistance($estimatedDistance)
+    public function setEstimatedDistance(float $estimatedDistance = null): RideEstimate
     {
         $this->estimatedDistance = $estimatedDistance;
 
         return $this;
     }
 
-    /**
-     * Get estimatedDuration
-     *
-     * @return float
-     */
-    public function getEstimatedDuration()
+    public function getEstimatedDuration(): ?float
     {
         return $this->estimatedDuration;
     }
 
-    /**
-     * Set estimatedDuration
-     *
-     * @param float $estimatedDuration
-     * @return RideEstimate
-     */
-    public function setEstimatedDuration($estimatedDuration)
+    public function setEstimatedDuration(float $estimatedDuration = null): RideEstimate
     {
         $this->estimatedDuration = $estimatedDuration;
 
         return $this;
     }
 
-    /**
-     * Get creationDateTime
-     *
-     * @return \DateTime
-     */
-    public function getCreationDateTime()
+    public function getDateTime(): \DateTime
     {
-        return $this->creationDateTime;
+        return $this->dateTime;
     }
 
-    /**
-     * Set creationDateTime
-     *
-     * @param \DateTime $creationDateTime
-     * @return RideEstimate
-     */
-    public function setCreationDateTime($creationDateTime)
+    public function setDateTime(\DateTime $dateTime): RideEstimate
     {
-        $this->creationDateTime = $creationDateTime;
+        $this->dateTime = $dateTime;
 
         return $this;
     }
 
-    /**
-     * Get user
-     *
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * Set user
-     *
-     * @param User $user
-     * @return RideEstimate
-     */
-    public function setUser(User $user = null)
+    public function setUser(User $user = null): RideEstimate
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * Get ride
-     *
-     * @return Ride
-     */
-    public function getRide()
+    public function getRide(): ?Ride
     {
         return $this->ride;
     }
 
-    /**
-     * Set ride
-     *
-     * @param Ride $ride
-     * @return RideEstimate
-     */
-    public function setRide(Ride $ride = null)
+    public function setRide(Ride $ride = null): RideEstimate
     {
         $this->ride = $ride;
 
         return $this;
     }
 
-    /**
-     * Get track
-     *
-     * @return Track
-     */
-    public function getTrack()
+    public function getTrack(): ?Track
     {
         return $this->track;
     }
 
-    /**
-     * Set track
-     *
-     * @param Track $track
-     * @return RideEstimate
-     */
-    public function setTrack(Track $track = null)
+    public function setTrack(Track $track = null): RideEstimate
     {
         $this->track = $track;
 
         return $this;
+    }
+
+    public function setLatitude(float $latitude = null): RideEstimate
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    public function setLongitude(float $longitude = null): RideEstimate
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
     }
 }

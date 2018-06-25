@@ -2,7 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\EntityInterface\ArchiveableInterface;
+use AppBundle\EntityInterface\AuditableInterface;
+use AppBundle\Criticalmass\SocialNetwork\EntityInterface\SocialNetworkProfileAble;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,11 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="subride")
  * @JMS\ExclusionPolicy("all")
  */
-class Subride implements ArchiveableInterface
+class Subride implements AuditableInterface, SocialNetworkProfileAble
 {
     /**
-     * Numerische ID der Tour.
-     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -30,6 +31,11 @@ class Subride implements ArchiveableInterface
      * @JMS\Expose
      */
     protected $ride;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SocialNetworkProfile", mappedBy="subride", cascade={"persist", "remove"})
+     */
+    protected $socialNetworkProfiles;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -51,10 +57,16 @@ class Subride implements ArchiveableInterface
     protected $dateTime;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false)
      * @JMS\Expose
      */
-    protected $creationDateTime;
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @JMS\Expose
+     */
+    protected $updatedAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -102,101 +114,43 @@ class Subride implements ArchiveableInterface
      */
     protected $user;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Subride", inversedBy="archive_subrides")
-     * @ORM\JoinColumn(name="archive_parent_id", referencedColumnName="id")
-     */
-    protected $archiveParent;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isArchived = false;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    protected $archiveDateTime;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="archive_subrides")
-     * @ORM\JoinColumn(name="archive_user_id", referencedColumnName="id")
-     */
-    protected $archiveUser;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     * @Assert\NotBlank()
-     */
-    protected $archiveMessage;
-
     public function __construct()
     {
-        $this->creationDateTime = new \DateTime();
-        $this->archiveDateTime = new \DateTime();
+        $this->createdAt = new \DateTime();
+
+        $this->socialNetworkProfiles = new ArrayCollection();
     }
 
     public function __clone()
     {
-        $this->setCreationDateTime(new \DateTime());
-        $this->setArchiveDateTime(null);
-        $this->setArchiveParent(null);
-        $this->setArchiveUser(null);
-        $this->setIsArchived(0);
+        $this->setCreatedAt(new \DateTime());
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     * @return SubRide
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): Subride
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return SubRide
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): Subride
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -205,112 +159,64 @@ class Subride implements ArchiveableInterface
      * @JMS\VirtualProperty
      * @JMS\SerializedName("timestamp")
      * @JMS\Type("integer")
-     * @return integer
      */
-    public function getTimestamp()
+    public function getTimestamp(): int
     {
         return $this->dateTime->format('U');
     }
 
-    /**
-     * Set dateTime
-     *
-     * @param \DateTime $dateTime
-     * @return SubRide
-     */
-    public function setDateTime($dateTime)
+    public function setDateTime(\DateTime $dateTime): Subride
     {
         $this->dateTime = $dateTime;
 
         return $this;
     }
 
-    /**
-     * Get dateTime
-     *
-     * @return \DateTime
-     */
-    public function getDateTime()
+    public function getDateTime(): \DateTime
     {
         return $this->dateTime;
     }
 
-    /**
-     * Set location
-     *
-     * @param string $location
-     * @return SubRide
-     */
-    public function setLocation($location)
+    public function setLocation(string $location): Subride
     {
         $this->location = $location;
 
         return $this;
     }
 
-    /**
-     * Get location
-     *
-     * @return string
-     */
-    public function getLocation()
+    public function getLocation(): ?string
     {
         return $this->location;
     }
 
-    /**
-     * Set latitude
-     *
-     * @param float $latitude
-     * @return SubRide
-     */
-    public function setLatitude($latitude)
+    public function setLatitude(float $latitude): Subride
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Get latitude
-     *
-     * @return float
-     */
-    public function getLatitude()
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    /**
-     * Set longitude
-     *
-     * @param float $longitude
-     * @return SubRide
-     */
-    public function setLongitude($longitude)
+    public function setLongitude(float $longitude): Subride
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-    /**
-     * Get longitude
-     *
-     * @return float
-     */
-    public function getLongitude()
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
     /**
-     * Set facebook
-     *
-     * @param string $facebook
-     * @return SubRide
+     * @deprecated
      */
-    public function setFacebook($facebook)
+    public function setFacebook(string $facebook = null): Subride
     {
         $this->facebook = $facebook;
 
@@ -318,22 +224,17 @@ class Subride implements ArchiveableInterface
     }
 
     /**
-     * Get facebook
-     *
-     * @return string
+     * @deprecated
      */
-    public function getFacebook()
+    public function getFacebook(): ?string
     {
         return $this->facebook;
     }
 
     /**
-     * Set twitter
-     *
-     * @param string $twitter
-     * @return SubRide
+     * @deprecated
      */
-    public function setTwitter($twitter)
+    public function setTwitter(string $twitter = null): Subride
     {
         $this->twitter = $twitter;
 
@@ -341,22 +242,17 @@ class Subride implements ArchiveableInterface
     }
 
     /**
-     * Get twitter
-     *
-     * @return string
+     * @deprecated
      */
-    public function getTwitter()
+    public function getTwitter(): ?string
     {
         return $this->twitter;
     }
 
     /**
-     * Set url
-     *
-     * @param string $url
-     * @return SubRide
+     * @deprecated
      */
-    public function setUrl($url)
+    public function setUrl(string $url = null): Subride
     {
         $this->url = $url;
 
@@ -364,211 +260,97 @@ class Subride implements ArchiveableInterface
     }
 
     /**
-     * Get url
-     *
-     * @return string
+     * @deprecated
      */
-    public function getUrl()
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    /**
-     * Set ride
-     *
-     * @param Ride $ride
-     * @return SubRide
-     */
-    public function setRide(Ride $ride = null)
+    public function setRide(Ride $ride = null): Subride
     {
         $this->ride = $ride;
 
         return $this;
     }
 
-    /**
-     * Get ride
-     *
-     * @return Ride
-     */
-    public function getRide()
+    public function getRide(): Ride
     {
         return $this->ride;
     }
 
-    /**
-     * Set user
-     *
-     * @param User $user
-     * @return SubRide
-     */
-    public function setUser(User $user = null)
+    public function setUser(User $user = null): Subride
     {
         $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * Get user
-     *
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * Set creationDateTime
-     *
-     * @param \DateTime $creationDateTime
-     * @return SubRide
-     */
-    public function setCreationDateTime($creationDateTime)
+    public function setCreatedAt(\DateTime $createdAt): Subride
     {
-        $this->creationDateTime = $creationDateTime;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    /**
-     * Get creationDateTime
-     *
-     * @return \DateTime
-     */
-    public function getCreationDateTime()
+    public function getCreatedAt(): \DateTime
     {
-        return $this->creationDateTime;
+        return $this->createdAt;
     }
 
-    public function getTime()
+    public function setUpdatedAt(\DateTime $updatedAt = null): Subride
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function getTime(): \DateTime
     {
         return $this->dateTime;
     }
 
-    public function setTime(\DateTime $time)
+    /** @deprecated */
+    public function setTime(\DateTime $time): Subride
     {
         $this->dateTime = new \DateTime($this->dateTime->format('Y-m-d') . ' ' . $time->format('H:i:s'));
-    }
-
-    /**
-     * Set isArchived
-     *
-     * @param boolean $isArchived
-     * @return SubRide
-     */
-    public function setIsArchived(bool $isArchived)
-    {
-        $this->isArchived = $isArchived;
 
         return $this;
     }
 
-    /**
-     * Get isArchived
-     *
-     * @return boolean
-     */
-    public function getIsArchived()
+    public function addSocialNetworkProfile(SocialNetworkProfile $socialNetworkProfile): Subride
     {
-        return $this->isArchived;
-    }
-
-    /**
-     * Set archiveDateTime
-     *
-     * @param \DateTime $archiveDateTime
-     * @return SubRide
-     */
-    public function setArchiveDateTime(\DateTime $archiveDateTime)
-    {
-        $this->archiveDateTime = $archiveDateTime;
+        $this->socialNetworkProfiles->add($socialNetworkProfile);
 
         return $this;
     }
 
-    /**
-     * Get archiveDateTime
-     *
-     * @return \DateTime
-     */
-    public function getArchiveDateTime()
+    public function setSocialNetworkProfiles(Collection $socialNetworkProfiles): Subride
     {
-        return $this->archiveDateTime;
-    }
-
-    /**
-     * Set archiveParent
-     *
-     * @param Subride $archiveParent
-     * @return Subride
-     */
-    public function setArchiveParent(ArchiveableInterface $archiveParent)
-    {
-        $this->archiveParent = $archiveParent;
+        $this->socialNetworkProfiles = $socialNetworkProfiles;
 
         return $this;
     }
 
-    /**
-     * Get archiveParent
-     *
-     * @return Subride
-     */
-    public function getArchiveParent()
+    public function getSocialNetworkProfiles(): Collection
     {
-        return $this->archiveParent;
+        return $this->socialNetworkProfiles;
     }
 
-    /**
-     * Set archiveUser
-     *
-     * @param User $archiveUser
-     * @return Subride
-     */
-    public function setArchiveUser(User $archiveUser)
+    public function removeSocialNetworkProfile(SocialNetworkProfile $socialNetworkProfile): Subride
     {
-        $this->archiveUser = $archiveUser;
+        $this->socialNetworkProfiles->removeElement($socialNetworkProfile);
 
         return $this;
-    }
-
-    /**
-     * Get archiveUser
-     *
-     * @return User
-     */
-    public function getArchiveUser()
-    {
-        return $this->archiveUser;
-    }
-
-    public function setArchiveMessage($archiveMessage)
-    {
-        $this->archiveMessage = $archiveMessage;
-
-        return $this;
-    }
-
-    public function getArchiveMessage()
-    {
-        return $this->archiveMessage;
-    }
-
-    public function archive(User $user): ArchiveableInterface
-    {
-        $archivedSubride = clone $this;
-
-        $archivedSubride
-            ->setIsArchived(true)
-            ->setArchiveDateTime(new \DateTime())
-            ->setArchiveParent($this)
-            ->setArchiveUser($user)
-            ->setArchiveMessage($this->archiveMessage);
-
-        $this->archiveMessage = '';
-
-        return $archivedSubride;
     }
 }

@@ -1,20 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     const TEMPLATE_MODE_FULL = 1;
     const TEMPLATE_MODE_FORM = 2;
     const TEMPLATE_MODE_MODAL = 3;
 
-    public function loginAction(Request $request, $templateMode = self::TEMPLATE_MODE_FULL): Response
+    public function loginAction(Request $request, int $templateMode = self::TEMPLATE_MODE_FULL): Response
     {
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
@@ -41,8 +40,7 @@ class SecurityController extends Controller
 
         $csrfToken = $this->get('security.csrf.token_manager')->getToken('authenticate')->getValue();
 
-        return $this->renderLogin(
-            [
+        return $this->renderLogin([
                 'last_username' => $lastUsername,
                 'error' => $error,
                 'csrf_token' => $csrfToken
@@ -51,7 +49,7 @@ class SecurityController extends Controller
         );
     }
 
-    protected function renderLogin(array $data, $templateMode = false): Response
+    protected function renderLogin(array $data, int $templateMode = null): Response
     {
         $templateName = '';
 
