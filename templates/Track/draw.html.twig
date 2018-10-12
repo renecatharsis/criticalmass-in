@@ -1,6 +1,6 @@
 {% extends 'Template/StandardTemplate.html.twig' %}
 
-{% block title %}Deine Tracks{% endblock %}
+{% block title %}{{ 'track.draw_page.title'|trans }}{% endblock %}
 
 {% block breadcrumb %}
     <li>
@@ -33,7 +33,7 @@
                     <input type="hidden" id="geojson" name="geojson"/>
 
                     <button type="submit" id="save-track" class="btn btn-default">
-                        Speichern
+                        {{ 'track.draw_page.form.submit.caption'|trans }}
                     </button>
                 </form>
             </div>

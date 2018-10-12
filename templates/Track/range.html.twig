@@ -25,15 +25,14 @@
         <div class="row">
             <div class="col-md-12">
                 <h2>
-                    Track beschneiden
+                    {{ 'track.range_page.title'|trans }}
                 </h2>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-                <p>Weniger ist manchmal mehr. Hier kannst du Anfang und Ende deiner Tour festlegen, falls du
-                    versehentlich zu viel aufgezeichnet hast und nicht möchtest, dass dir jemand nach Hause folgt.</p>
+                <p>{{ 'track.range_page.intro'|trans }}</p>
             </div>
         </div>
 
@@ -54,10 +53,10 @@
                 {{ form_start(form) }}
                 <div class="btn-group pull-right" role="group" aria-label="...">
                     <button class="btn btn-success" type="submit">
-                        Speichern
+                        {{ 'track.range_page.form.submit'|trans }}
                     </button>
                     <a class="btn btn-default" href="{{ path('caldera_criticalmass_track_list') }}">
-                        Abbrechen
+                        {{ 'track.range_page.form.cancel'|trans }}
                     </a>
                 </div>
                 {{ form_end(form) }}

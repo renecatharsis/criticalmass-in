@@ -1,6 +1,6 @@
 {% extends 'Template/StandardTemplate.html.twig' %}
 
-{% block title %}Deine Tracks{% endblock %}
+{% block title %}{{ 'track.view_page.title'|trans }}{% endblock %}
 
 {% block breadcrumb %}
     <li>
@@ -42,7 +42,7 @@
             <div class="col-md-3">
                 <dl>
                     <dt>
-                        Tour:
+                        {{ 'track.properties.ride'|trans }}
                     </dt>
                     <dd>
                         <a href="{{ objectPath(track.ride) }}">
@@ -55,7 +55,7 @@
             <div class="col-md-2">
                 <dl>
                     <dt>
-                        Datum:
+                        {{ 'track.properties.date'|trans }}
                     </dt>
                     <dd>
                         {{ track.ride.dateTime|date('d.m.Y H:i', track.ride.city.timezone) }}&nbsp;Uhr
@@ -66,13 +66,13 @@
             <div class="col-md-3">
                 <dl>
                     <dt>
-                        Treffpunkt:
+                        {{ 'track.properties.ride_location'|trans }}
                     </dt>
                     <dd>
                         {% if track.ride.getHasLocation and track.ride.location %}
                             {{ track.ride.location }}
                         {% else %}
-                            nicht bekannt
+                            {{ 'track.properties.ride_location_unknown'|trans }}
                         {% endif %}
                     </dd>
                 </dl>
@@ -81,10 +81,10 @@
             <div class="col-md-2">
                 <dl>
                     <dt>
-                        Distanz:
+                        {{ 'track.properties.distance'|trans }}
                     </dt>
                     <dd>
-                        {{ track.distance|round(2) }}&nbsp;Kilometer
+                        {{ track.distance|round(2) }}&nbsp;km
                     </dd>
                 </dl>
             </div>
@@ -92,7 +92,7 @@
             <div class="col-md-2">
                 <dl>
                     <dt>
-                        Dauer:
+                        {{ 'track.properties.durantion'|trans }}
                     </dt>
                     <dd>
                         {{ human_duration(track.getDurationInSeconds()) }}
@@ -107,24 +107,24 @@
                     {% if previousTrack %}
                         <li class="previous">
                             <a href="{{ objectPath(previousTrack) }}">
-                                &larr; Voriger Track
+                                &larr; {{ 'track.previous'|trans }}
                             </a>
                         </li>
                     {% else %}
                         <li class="previous disabled">
-                            <a href="#">&larr; Voriger Track</a>
+                            <a href="#">&larr; {{ 'track.previous'|trans }}</a>
                         </li>
                     {% endif %}
 
                     {% if nextTrack %}
                         <li class="next">
                             <a href="{{ objectPath(nextTrack) }}">
-                                Nächster Track &rarr;
+                                {{ 'track.next'|trans }} &rarr;
                             </a>
                         </li>
                     {% else %}
                         <li class="next disabled">
-                            <a href="#">Nächster Track &rarr;</a>
+                            <a href="#">{{ 'track.next'|trans }} &rarr;</a>
                         </li>
                     {% endif %}
                 </ul>

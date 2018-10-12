@@ -92,3 +92,28 @@ hint_modal:
         post_add_button:
             title: Kommentar verfassen
             text: '<p>Gefällt dir dieses Foto? Hast du etwas lustiges während der Tour erlebt? Mit einem criticalmass.in-Benutzerkonto kannst du an dieser Stelle einen Kommentar verfassen.</p>'
+
+track:
+    draw_page:
+        title: Track zeichnen
+        form:
+            submit:
+                caption: Speichern
+    view_page:
+        title: Track anzeigen
+
+    list_page:
+        title: Deine Tracks
+
+    range_page:
+        title: Track beschneiden
+        intro: Weniger ist manchmal mehr. Hier kannst du Anfang und Ende deiner Tour festlegen, falls du versehentlich zu viel aufgezeichnet hast und nicht möchtest, dass dir jemand nach Hause folgt.
+        form:
+            submit: Speichern
+            cancel: Abbrechen
+
+    properties:
+        ride: Tour
+        date: Datum
+        ride_location: Treffpunkt
+        ride_location_unknown: unbekannt
